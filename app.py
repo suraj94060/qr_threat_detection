@@ -7,9 +7,8 @@ import cv2
 
 app = Flask(__name__)
 
-# Replace with your actual API keys
-VIRUSTOTAL_API_KEY = "fbd9ad1e8656622735b122539a364eefab54cadac5507430a877d94f372fe58b"
-GOOGLE_SAFE_BROWSING_API_KEY = "AIzaSyAUo8SzP2SgWpyj45eAP6P5aChWFKmZlo8"
+VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY")
+GOOGLE_SAFE_BROWSING_API_KEY = os.getenv("GOOGLE_SAFE_BROWSING_API_KEY")
 def calculate_risk_score(vt_result: str, gsb_result: str) -> int:
     score = 0
     
