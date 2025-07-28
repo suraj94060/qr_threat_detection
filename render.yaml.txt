@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: qr-threat-scanner
+    env: python
+    buildCommand: ""
+    startCommand: python app.py
+    envVars:
+      - key: PORT
+        value: 10000

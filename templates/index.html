@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Threat Scanner</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f6f9;
+      padding-top: 50px;
+    }
+    .container {
+      max-width: 600px;
+    }
+    .card {
+      border-radius: 15px;
+    }
+    .risk-bar {
+      height: 20px;
+      border-radius: 10px;
+      background-color: #e9ecef;
+      overflow: hidden;
+    }
+    .risk-fill {
+      height: 100%;
+      transition: width 0.4s;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card shadow p-4">
+    <h3 class="text-center mb-4">🔍 QR Code Threat Scanner</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Upload QR Code Image</label>
+        <input class="form-control" type="file" name="qr_image" required>
+      </div>
+      <div class="d-grid">
+        <button class="btn btn-primary">Scan</button>
+      </div>
+    </form>
+
+    {% if result %}
+      <hr>
+      <div class="mt-4">
+        <h5>📄 Result:</h5>
+        <p>{{ result }}</p>
+
+        {% if vt_result %}
+          <h5>🛡️ VirusTotal:</h5>
+          <p>{{ vt_result }}</p>
+        {% endif %}
+
+        {% if gsb_result %}
+          <h5>🧪 Google Safe Browsing:</h5>
+          <p>{{ gsb_result }}</p>
+        {% endif %}
+
+        {% if risk_score != "" %}
+          <h5>⚠️ Overall Risk Score:</h5>
+          <div class="risk-bar mb-2">
+            <div class="risk-fill" style="width: {{ risk_score }}%; background-color: {% if risk_score >= 80 %}#dc3545{% elif risk_score >= 40 %}#ffc107{% else %}#28a745{% endif %};"></div>
+          </div>
+          <strong>{{ risk_score }} / 100</strong>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>
+
+
