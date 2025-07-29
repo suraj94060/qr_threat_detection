@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Scan Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            margin: 0.7rem 0;
+        }
+
+        .download-btn {
+            margin-top: 2rem;
+            background-color: #444;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <video class="background-video" autoplay muted loop>
+        <source src="{{ url_for('static', filename='bg-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container">
+        <div class="box">
+            <div class="title">QR Scan Results</div>
+
+            {% if url %}
+                <p class="result-text"><strong>URL:</strong> {{ url }}</p>
+                <p class="result-text"><strong>VirusTotal:</strong> {{ vt_result }}</p>
+                <p class="result-text"><strong>Google Safe Browsing:</strong> {{ gsb_result }}</p>
+                <p class="result-text"><strong>Risk Score:</strong> {{ risk_score }}</p>
+
+                <form method="post" action="/download_pdf">
+                    <button type="submit" class="download-btn">Download PDF Report</button>
+                </form>
+            {% else %}
+                <p class="result-text">No QR code detected or an error occurred.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
+

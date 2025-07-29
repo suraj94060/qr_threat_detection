@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Threat Scanner</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.5);
+    }
+
+    .container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2rem 3rem;
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      max-width: 500px;
+      width: 100%;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      color: #e0e0e0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input[type="file"] {
+      padding: 0.6rem;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background: #4a90e2;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #3a7fd9;
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .download-btn {
+      margin-top: 1rem;
+      background: #28a745;
+    }
+
+    .download-btn:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video class="video-bg" autoplay muted loop>
+    <source src="{{ url_for('static', filename='bg-video.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="container">
+    <div class="card">
+      <h1>QR Threat Scanner</h1>
+      <form method="POST" action="{{ url_for('scan') }}" enctype="multipart/form-data">
+        <input type="file" name="qr_image" accept="image/*" required />
+        <button type="submit">Scan QR Code</button>
+      </form>
+
+      {% if result %}
+      <div class="result">
+        <strong>{{ result }}</strong><br>
+        {% if vt_result %}🛡️ VirusTotal: {{ vt_result }}<br>{% endif %}
+        {% if gsb_result %}🕵️ GSB: {{ gsb_result }}<br>{% endif %}
+        {% if risk_score %}⚠️ Risk Score: {{ risk_score }} / 100<br>{% endif %}
+
+        {% if pdf_ready %}
+        <form action="{{ url_for('download_pdf') }}" method="post">
+          <button class="download-btn" type="submit">Download Report PDF</button>
+        </form>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</body>
+</html>
