@@ -1,5 +1,0 @@
-Flask
-requests
-opencv-python
-pillow
-gunicorn
